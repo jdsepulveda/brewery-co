@@ -1,7 +1,8 @@
 package quebec.artm.breweryco.presentation.breweries.screens.landing.models
 
-import quebec.artm.breweryco.domain.breweries.model.Brewery
-
-data class BreweriesScreenViewModelState(
-    val breweries : List<BreweryUiData> = emptyList(),
-)
+sealed class BreweriesScreenViewModelState<out T> {
+    data object Idle : BreweriesScreenViewModelState<Nothing>()
+    data object Loading : BreweriesScreenViewModelState<Nothing>()
+    data class Success<T>(val data: T) : BreweriesScreenViewModelState<T>()
+    data class Error(val message: String) : BreweriesScreenViewModelState<Nothing>()
+}

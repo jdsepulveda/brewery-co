@@ -1,7 +1,5 @@
 package quebec.artm.breweryco.presentation.breweries.screens.landing
 
-import android.util.Log
-import androidx.compose.runtime.key
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,17 +20,22 @@ import javax.inject.Inject
 class BreweriesScreenViewModel @Inject constructor(
     private val getAllBreweriesUseCase: GetAllBreweriesUseCase
 ) : ViewModel() {
-    private val _state = MutableStateFlow(BreweriesScreenViewModelState())
-    val state: StateFlow<BreweriesScreenViewModelState> = _state
+
+    private val _state = MutableStateFlow<BreweriesScreenViewModelState<List<BreweryUiData>>>(
+        BreweriesScreenViewModelState.Idle
+    )
+    val state: StateFlow<BreweriesScreenViewModelState<List<BreweryUiData>>> = _state
         .onStart { onCollectingStarted() }
         .stateIn(
             viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = BreweriesScreenViewModelState()
+            initialValue = BreweriesScreenViewModelState.Idle
         )
 
     private fun onCollectingStarted() {
         viewModelScope.launch {
+            _state.value = BreweriesScreenViewModelState.Loading
+
             getAllBreweriesUseCase.invoke().fold(
                 onSuccess = ::onBreweriesFetched,
                 onFailure = ::onError
@@ -42,15 +45,15 @@ class BreweriesScreenViewModel @Inject constructor(
 
     private fun onBreweriesFetched(breweries: List<Brewery>) {
         _state.update {
-            it.copy(
-                breweries = breweries.map { it.toUiModel() },
-            )
+            BreweriesScreenViewModelState.Success(breweries.map { it.toUiModel() })
         }
     }
 
     private fun onError(throwable: Throwable) {
+        _state.value = BreweriesScreenViewModelState.Error(
+            throwable.message ?: "Unknown error"
+        )
     }
-
 }
 
 private fun Brewery.toUiModel(): BreweryUiData = BreweryUiData(

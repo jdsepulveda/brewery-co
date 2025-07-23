@@ -1,5 +1,6 @@
 package quebec.artm.breweryco.presentation.breweries.screens.landing
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,15 +12,36 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import quebec.artm.breweryco.presentation.breweries.screens.landing.composables.ErrorMessage
+import quebec.artm.breweryco.presentation.breweries.screens.landing.composables.FullScreenLoading
+import quebec.artm.breweryco.presentation.breweries.screens.landing.models.BreweriesScreenViewModelState
 import quebec.artm.breweryco.presentation.breweries.screens.landing.models.BreweryUiData
 
 @Composable
 fun BreweriesScreen(vm: BreweriesScreenViewModel) {
     val state by vm.state.collectAsState()
-    BreweriesRender(
-        modifier = Modifier.fillMaxWidth(),
-        breweries = state.breweries
-    )
+
+    if (state is BreweriesScreenViewModelState.Loading) {
+        FullScreenLoading(
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+    if (state is BreweriesScreenViewModelState.Error) {
+        ErrorMessage(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            text = (state as BreweriesScreenViewModelState.Error).message
+        )
+    }
+    if (state is BreweriesScreenViewModelState.Success) {
+        val breweries = (state as BreweriesScreenViewModelState.Success).data
+
+        BreweriesRender(
+            modifier = Modifier.fillMaxWidth(),
+            breweries = breweries
+        )
+    }
 }
 
 @Composable
