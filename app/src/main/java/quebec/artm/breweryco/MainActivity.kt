@@ -12,10 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
+import quebec.artm.breweryco.presentation.breweries.screens.brewerydetail.BreweryDetailScreen
 import quebec.artm.breweryco.presentation.breweries.screens.landing.BreweriesScreen
 import quebec.artm.breweryco.presentation.navigation.Destinations
 import quebec.artm.breweryco.ui.theme.BreweryCoTheme
@@ -28,8 +31,34 @@ class MainActivity : ComponentActivity() {
         setContent {
             BreweryCoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    NavHost(rememberNavController(), startDestination = Destinations.Home, modifier = Modifier.padding(innerPadding)) {
-                        composable<Destinations.Home> { BreweriesScreen(hiltViewModel()) }
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController,
+                        startDestination = Destinations.Home,
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        composable<Destinations.Home> {
+                            BreweriesScreen(
+                                vm = hiltViewModel(),
+                                onBreweryClick = { brewery ->
+                                    navController.navigate(
+                                        Destinations.BreweryDetail.createRoute(brewery)
+                                    )
+                                }
+                            )
+                        }
+                        composable(
+                            route = Destinations.BreweryDetail.ROUTE,
+                            arguments = listOf(navArgument("brewery") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val brewery = Destinations.BreweryDetail.parse(backStackEntry)
+                            if (brewery != null) {
+                                BreweryDetailScreen(
+                                    brewery = brewery,
+                                    onBackClick = { navController.popBackStack() }
+                                )
+                            }
+                        }
                     }
                 }
             }

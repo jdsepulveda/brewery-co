@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">BreweryCo</string>
+    <string name="name">Name: %1$s</string>
+    <string name="address">Address: %1$s</string>
+    <string name="type">Type: %1$s</string>
+    <string name="phone">Phone: %1$s</string>
+    <string name="website">Website: %1$s</string>
+    <string name="brewery_detail">Brewery Detail</string>
+    <string name="back_brewery_list">Go back to the brewery list</string>
 </resources>

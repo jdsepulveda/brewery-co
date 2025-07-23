@@ -7,5 +7,6 @@ data class Brewery(
     val type: BreweryType,
     val latitude: Double,
     val longitude: Double,
-    val phone: String?
+    val phone: String,
+    val websiteUrl: String
 )

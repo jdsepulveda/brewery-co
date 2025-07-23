@@ -1,5 +1,6 @@
 package quebec.artm.breweryco.presentation.breweries.screens.landing
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +19,10 @@ import quebec.artm.breweryco.presentation.breweries.screens.landing.models.Brewe
 import quebec.artm.breweryco.presentation.breweries.screens.landing.models.BreweryUiData
 
 @Composable
-fun BreweriesScreen(vm: BreweriesScreenViewModel) {
+fun BreweriesScreen(
+    vm: BreweriesScreenViewModel,
+    onBreweryClick: (BreweryUiData) -> Unit
+) {
     val state by vm.state.collectAsState()
 
     if (state is BreweriesScreenViewModelState.Loading) {
@@ -39,7 +43,8 @@ fun BreweriesScreen(vm: BreweriesScreenViewModel) {
 
         BreweriesRender(
             modifier = Modifier.fillMaxWidth(),
-            breweries = breweries
+            breweries = breweries,
+            onBreweryClick = onBreweryClick
         )
     }
 }
@@ -47,15 +52,15 @@ fun BreweriesScreen(vm: BreweriesScreenViewModel) {
 @Composable
 private fun BreweriesRender(
     modifier: Modifier = Modifier,
-    breweries: List<BreweryUiData>
+    breweries: List<BreweryUiData>,
+    onBreweryClick: (BreweryUiData) -> Unit
 ) {
-
     LazyColumn(modifier) {
         itemsIndexed(breweries, key = { _, item -> item.key }) { index, brewery ->
-
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable { onBreweryClick(brewery) }
                     .padding(horizontal = 12.dp, vertical = 8.dp),
                 text = brewery.name
             )
@@ -64,6 +69,5 @@ private fun BreweriesRender(
                 HorizontalDivider()
             }
         }
-
     }
 }

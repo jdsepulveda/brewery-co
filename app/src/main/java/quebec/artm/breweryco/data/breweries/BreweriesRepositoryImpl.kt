@@ -29,6 +29,7 @@ class BreweriesRepositoryImpl @Inject constructor(
             latitude = this.latitude ?: 0.0,
             longitude = this.longitude ?: 0.0,
             phone = this.phone ?: "",
+            websiteUrl = this.websiteUrl ?: ""
         )
     }
 }

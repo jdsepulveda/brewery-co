@@ -66,6 +66,8 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
+    implementation(libs.kotlinx.serialization.json)
+
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.assertj.core)
     testImplementation(libs.kotlinx.coroutines.test)

@@ -1,5 +1,8 @@
 package quebec.artm.breweryco.domain.breweries.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class BreweryType(val id: String) {
     MICRO("micro"),
     NANO("nano"),

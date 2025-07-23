@@ -59,4 +59,8 @@ class BreweriesScreenViewModel @Inject constructor(
 private fun Brewery.toUiModel(): BreweryUiData = BreweryUiData(
     key = id,
     name = name,
+    address1 = address1,
+    type = type,
+    phone = phone,
+    websiteUrl = websiteUrl
 )
