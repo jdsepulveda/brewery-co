@@ -22,13 +22,13 @@ class BreweriesRepositoryImpl @Inject constructor(
 
     private fun BreweryDto.toDomain(): Brewery {
         return Brewery(
-            id = this.id!!,
-            name = this.name!!,
-            address1 = this.address1!!,
-            type = BreweryType.fromId(this.breweryType!!),
-            latitude = this.latitude!!,
-            longitude = this.longitude!!,
-            phone = this.phone,
+            id = this.id ?: "",
+            name = this.name ?: "",
+            address1 = this.address1 ?: "",
+            type = BreweryType.fromId(this.breweryType ?: ""),
+            latitude = this.latitude ?: 0.0,
+            longitude = this.longitude ?: 0.0,
+            phone = this.phone ?: "",
         )
     }
 }
